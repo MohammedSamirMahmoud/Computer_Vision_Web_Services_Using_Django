@@ -1,0 +1,26 @@
+{% extends 'App_2_CV_Videos/base.html' %}
+
+
+
+{% block content %}
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="myfile">
+    <button type="submit">Upload</button>
+</form>
+
+
+
+{% if original_img %}
+<img src="{{ original_img }}" alt="Original" width="500" height="333">
+
+{% endif %}
+
+{% if obb_img %}
+<img src="{{ obb_img }}" alt="OBB" width="500" height="333">
+
+{% endif %}
+
+
+{% endblock %}
