@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>{% block title %}Computer Vision Demo{% endblock %}</title>
+  <title>{% block title %}Computer Vision Web Service Demo{% endblock %}</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
 	<!-- jQuery library -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/4.3.1/jquery.min.js"></script>
@@ -15,6 +15,13 @@
   .fakeimg {
     height: 200px;
     background: #aaa;
+  }
+  body {
+  {% load static %}
+  background-image: url({% static "App_1_CV_Images/computer_vision_background_1.jpg" %});
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
   }
   </style>
 </head>
@@ -50,13 +57,43 @@
   <div class="row">
     <div class="col-sm-12">
         {% block content %}
+          <!--
+          <div class="background-image" style="background: url({% static 'App_1_CV_Images\computer_vision_background_1.jpg' %}) no-repeat; background-size: 100%;">
+          <div class="container">
+          <h2 class="title-text">{{ background.title }}</h2>
+          <p class="body-text">{{ background.body }}</p>
+          </div>
+          </div>
+          -->
         {% endblock %}
     </div>
   </div>
 </div>
 
+
 <!--div class="jumbotron text-center" style="margin-bottom:0">
   <p>Pandas Profiler is an experiment using django, bootstrap to upload a file to a website, process that file and display the results back to the user withouth having to know python or pandas.  It's also great for lazy data scientests</p>
 </div-->
+
+
+
+
+
+ <head>
+  <style type ="text/css" >
+   .footer{
+       position: fixed;
+       text-align: right;
+       bottom: 0px;
+       width: 100%;
+   }
+  </style>
+  </head>
+<body>
+    <div class="footer" style="color:white">Contact Me @Mohammed.Samir.Mahmoud@gmail.com</div>
+</body>
+
+<p style=" color:yellow; font-size:25px; position: absolute; bottom: 1; left: 0; width: 100%; text-align: left;">Created by @Mohammed Samir</p>
+
 </body>
 </html>
