@@ -27,6 +27,7 @@ import torchvision.transforms as T
 from PIL import Image
 import numpy as np
 import cv2
+#from darknet import Darknet
 
 
 # Create your views here.
@@ -146,6 +147,82 @@ def semantic_segmentation(request):
 
     return render(request, 'App_1_CV_Images/semantic_segmentation.html')
 
+
+
+# Object Detection Part
+
+COCO_INSTANCE_CATEGORY_NAMES = [
+    '__background__', 'person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus',
+    'train', 'truck', 'boat', 'traffic', 'light', 'fire', 'hydrant', 'N/A', 'stop',
+    'sign', 'parking', 'meter', 'bench', 'bird', 'cat', 'dog', 'horse', 'sheep', 'cow',
+    'train', 'truck', 'boat', 'traffic light', 'fire hydrant', 'N/A', 'stop sign',
+    'parking meter', 'bench', 'bird', 'cat', 'dog', 'horse', 'sheep', 'cow',
+    'elephant', 'bear', 'zebra', 'giraffe', 'N/A', 'backpack', 'umbrella', 'N/A', 'N/A',
+    'handbag', 'tie', 'suitcase', 'frisbee', 'skis', 'snowboard', 'sports', 'ball',
+    'kite', 'baseball', 'bat', 'baseball', 'glove', 'skateboard', 'surfboard', 'tennis',
+    'racket', 'bottle', 'N/A', 'wine', 'glass', 'cup', 'fork', 'knife', 'spoon', 'bowl',
+    'banana', 'apple', 'sandwich', 'orange', 'broccoli', 'carrot', 'hot', 'dog', 'pizza',
+    'donut', 'cake', 'chair', 'couch', 'potted', 'plant', 'bed', 'N/A', 'dining', 'table',
+    'N/A', 'N/A', 'toilet', 'N/A', 'tv', 'laptop', 'mouse', 'remote', 'keyboard', 'cell',
+    'phone', 'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'N/A', 'book',
+    'clock', 'vase', 'scissors', 'teddy', 'bear', 'hair', 'drier', 'toothbrush',
+    'handbag', 'tie', 'suitcase', 'frisbee', 'skis',
+    'snowboard', 'sports ball',
+    'kite', 'baseball bat', 'baseball glove', 'skateboard', 'surfboard', 'tennis racket',
+    'bottle', 'N/A', 'wine glass', 'cup', 'fork', 'knife', 'spoon', 'bowl',
+    'banana', 'apple', 'sandwich', 'orange', 'broccoli', 'carrot', 'hot dog', 'pizza',
+    'donut', 'cake', 'chair', 'couch', 'potted plant', 'bed', 'N/A', 'dining table',
+    'N/A', 'N/A', 'toilet', 'N/A', 'tv', 'laptop', 'mouse', 'remote', 'keyboard', 'cell phone',
+    'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'N/A', 'book',
+    'clock', 'vase', 'scissors', 'teddy bear', 'hair drier', 'toothbrush'
+    ]
+
+
+def get_predictions(img_path, threshold):
+    input_image = Image.open(img_path)   # Opening the image
+    transform = T.Compose([T.ToTensor()]) # Defining Pytorch Transform
+    input_image = transform(input_image) # Apply the transform to the image
+    input_image = input_image.unsqueeze(0)
+    #img = image.load_img(img_file, target_size=(224, 224))
+    # Converting img to a numpy array --> `img_as_a_numpy_array` is a float32 Numpy array of shape (224, 224, 3)
+    #img_as_a_numpy_array = image.img_to_array(img)
+    model = models.detection.fasterrcnn_resnet50_fpn(pretrained=True).eval()
+    predictions = model(input_image)
+    predicted_class = [COCO_INSTANCE_CATEGORY_NAMES[i] for i in list(predictions[0]['labels'].numpy())]  # Get the Prediction Score
+    predicted_boxes = [[(i[0], i[1]), (i[2], i[3])] for i in list(predictions[0]['boxes'].detach().numpy())]  # Bounding boxes
+    predicted_score = list(predictions[0]['scores'].detach().numpy())
+    prediction_threshold = [predicted_score.index(x) for x in predicted_score if x > threshold][-1] # Get list of index with score greater than threshold.
+    predicted_boxes = predicted_boxes[:prediction_threshold+1]
+    predicted_class = predicted_class[:prediction_threshold+1]
+    return predicted_boxes, predicted_class
+
 def object_detection(request):
-    print('Nthing')
+    #print('Nthing')
+    if request.method == 'POST' and request.FILES['myfile']:
+
+        my_file = request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = fs.save(my_file.name, my_file)
+        img_file = fs.url(filename)
+
+        rect_th = 1
+        text_size = 0.2
+        text_th = 1
+        img_file_dir = settings.BASE_DIR + '/' + img_file
+        img = cv2.imread(img_file_dir)  # Read image with cv2
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # Convert to RGB
+        # plt.imshow(img)
+        # plt.show()
+        for box, cls in zip(boxes, predicted_cls):  # range(len(boxes)):
+            cv2.rectangle(img, box[0], box[1], color=(0, 255, 0),
+                          thickness=rect_th)  # Draw Rectangle with the coordinates
+            cv2.putText(img, cls, box[0], cv2.FONT_HERSHEY_SIMPLEX, text_size, (0, 255, 0),
+                        thickness=text_th)  # Write the prediction class
+
+            obb_file = settings.MEDIA_ROOT + '/obb_img.png'
+            cv2.imwrite(obb_file, img)
+
+        return render(request, 'App_1_CV_Images/object_detection.html', {'original_img': img_file,
+                                                                             'obb_img': '/media/obb_img.png'})
+
     return render(request, 'App_1_CV_Images/object_detection.html')
