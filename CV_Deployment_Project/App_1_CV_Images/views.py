@@ -204,7 +204,7 @@ def object_detection(request):
         fs = FileSystemStorage()
         filename = fs.save(my_file.name, my_file)
         img_file = fs.url(filename)
-
+        boxes, pred_cls = get_predictions(img_file, threshold=0.82) # Get predictions
         rect_th = 1
         text_size = 0.2
         text_th = 1
