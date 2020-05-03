@@ -150,7 +150,7 @@ def semantic_segmentation(request):
 
 
 # Object Detection Part
-
+# Testing Codes 
 COCO_INSTANCE_CATEGORY_NAMES = [
     '__background__', 'person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus',
     'train', 'truck', 'boat', 'traffic', 'light', 'fire', 'hydrant', 'N/A', 'stop',
