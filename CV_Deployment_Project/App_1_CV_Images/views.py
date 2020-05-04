@@ -221,3 +221,21 @@ def object_detection(request):
                                                                              'obb_img': '/media/obb_img.png'})
 
     return render(request, 'App_1_CV_Images/object_detection.html')
+
+## Submitting Feedback Function
+
+from django.shortcuts import render
+from .forms import FeedbackForm
+
+
+
+def feedback_form(request):
+    if request.method == "POST":
+        form = FeedbackForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return render(request, 'App_1_CV_Images/thanks.html')
+    else:
+        form = FeedbackForm()
+    return render(request, 'App_1_CV_Images/feedback_form.html', {'form': form})
