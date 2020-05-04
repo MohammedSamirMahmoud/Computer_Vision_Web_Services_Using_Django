@@ -331,5 +331,4 @@ The main purpose of this repo is to provide all steps required for hosting your 
             $ git commit -am "committing all local side code"
             $ git push origin                    
 
-### Note : This work is done for educational purpose.
-I've used/redeployed alot of github repos/stackoverflow posts ,etc . One of the main repos that inspired this work is this one : https://ahmadelsallab.github.io/CV/  Created by Dr.AhmadElSallab - Senior Expert of AI at Valeo. 
+##### Note : This work is done for educational purpose. I've used/redeployed alot of github repos/stackoverflow posts ,etc . One of the main repos that inspired this work is this one : https://ahmadelsallab.github.io/CV/  Created by Dr.AhmadElSallab - Senior Expert of AI at Valeo. 
