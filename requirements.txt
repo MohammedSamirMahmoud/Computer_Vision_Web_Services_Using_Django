@@ -1,6 +1,6 @@
 Django==3.0.5
-#torch==1.5.0+cpu
-#torchvision==0.6.0+cpu
+torch==1.5.0+cpu
+torchvision==0.6.0+cpu
 numpy==1.18.2
 opencv-python==4.2.0.34
 tensorflow==2.1.0
@@ -8,3 +8,5 @@ Pillow==7.1.1
 keras==2.3.1
 h5py==2.10.0
 pandas==1.0.3
+
+# For minimal installation or any errors due to instance weak resources, please use --no-cache-dir while installing tensorflow/torch
